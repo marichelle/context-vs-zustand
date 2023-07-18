@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 interface ZustandStoreProps {
   containerData: boolean
@@ -9,13 +10,18 @@ interface ZustandStoreProps {
   setInnerTwoData: (value: boolean) => void
 }
 
-const useZustandStore = create<ZustandStoreProps, any>(set => ({
-  containerData: false,
-  innerOneData: false,
-  innerTwoData: false,
-  setContainerData: args => set({ containerData: args }),
-  setInnerOneData: args => set({ innerOneData: args }),
-  setInnerTwoData: args => set({ innerTwoData: args }),
-}))
+const useZustandStore = create<ZustandStoreProps, [['zustand/persist', never]]>(
+  persist(
+    set => ({
+      containerData: false,
+      innerOneData: false,
+      innerTwoData: false,
+      setContainerData: args => set({ containerData: args }),
+      setInnerOneData: args => set({ innerOneData: args }),
+      setInnerTwoData: args => set({ innerTwoData: args }),
+    }),
+    { name: 'useZustandStore' }
+  )
+)
 
 export default useZustandStore
